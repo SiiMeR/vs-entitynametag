@@ -5,8 +5,11 @@
   "authors": [
     "SiiMeR"
   ],
+  "contributors": [
+    "justOmi"
+  ],
   "description": "Adds a nametag item that can be used to name entities (elks, boats, etc.)",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "dependencies": {
     "game": ""
   }
