@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "modid": "entitynametag",
+  "name": "Entity Nametags",
+  "authors": [
+    "SiiMeR"
+  ],
+  "description": "Adds a nametag item that can be used to name entities (elks, boats, etc.)",
+  "version": "1.0.4",
+  "dependencies": {
+    "game": ""
+  }
+}

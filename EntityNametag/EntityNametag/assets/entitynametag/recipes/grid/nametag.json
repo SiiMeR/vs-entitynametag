@@ -1,0 +1,23 @@
+[
+  {
+    ingredientPattern: "P,F",
+    ingredients: {
+      "P": {
+        type: "item",
+        code: "game:paper-parchment"
+      },
+      "F": {
+        type: "item",
+        code: "game:flaxfibers"
+      }
+    },
+    width: 1,
+    height: 2,
+    shapeless: true,
+    output: {
+      type: "item",
+      code: "nametag",
+      quantity: 1
+    }
+  }
+]

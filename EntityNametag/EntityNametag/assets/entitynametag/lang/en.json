@@ -1,0 +1,10 @@
+{
+  "editortitle": "Enter a new name for this entity",
+  "editorcancel": "Cancel",
+  "editorconfirm": "Confirm",
+  "editorclear": "Clear",
+  "item-nametag": "Nametag",
+  "itemdesc-nametag": "Used to give names to entities like boats and elks. Requires an ink and quill in the offhand to use.",
+  "game:tabname-nametag": "Nametag",
+  "name": "Give a name to the entity being currently looked at"
+}
