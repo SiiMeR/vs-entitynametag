@@ -6,6 +6,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Server;
+using Vintagestory.GameContent;
 
 namespace EntityNametag;
 
@@ -75,16 +76,15 @@ public class EntityNametagModSystem : ModSystem
             return;
         }
 
-        var originalName = entity.GetName();
 
-        entity.WatchedAttributes.SetString("customName", packet.NewName);
-        entity.WatchedAttributes.MarkPathDirty("customName");
+        var itemFound = false;
 
         var slot = fromPlayer.InventoryManager.ActiveHotbarSlot;
         if (slot.Itemstack.Collectible is ItemEntityNametag)
         {
             slot.TakeOut(1);
             slot.MarkDirty();
+            itemFound = true;
         }
         else
         {
@@ -94,6 +94,7 @@ public class EntityNametagModSystem : ModSystem
                 {
                     s.TakeOut(1);
                     s.MarkDirty();
+                    itemFound = true;
                     return false;
                 }
 
@@ -101,8 +102,31 @@ public class EntityNametagModSystem : ModSystem
             });
         }
 
+        if (!itemFound)
+        {
+            return;
+        }
+
+        var originalName = entity.GetName();
+
+        entity.WatchedAttributes.SetString("customName", packet.NewName);
+        entity.WatchedAttributes.MarkPathDirty("customName");
+
         Api.Logger.Audit(
             $"Player {fromPlayer.PlayerName} ({fromPlayer.PlayerUID}) renamed entity {entity.Code} (at {entity.ServerPos.AsBlockPos}) from '{originalName}' to '{packet.NewName}'");
+
+        var ownableBehavior = entity.GetBehavior<EntityBehaviorOwnable>();
+        if (ownableBehavior != null && entity is EntityBoat)
+        {
+            if (packet.ShouldHaveOwnership)
+            {
+                Api.ModLoader.GetModSystem<ModSystemEntityOwnership>().ClaimOwnership(entity, fromPlayer.Entity);
+            }
+            else
+            {
+                Api.ModLoader.GetModSystem<ModSystemEntityOwnership>().RemoveOwnership(entity);
+            }
+        }
     }
 
     private void OnConfigPacketReceived(ConfigPacket packet)

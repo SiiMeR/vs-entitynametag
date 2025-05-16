@@ -6,5 +6,6 @@
   "item-nametag": "Nametag",
   "itemdesc-nametag": "Used to give names to entities like boats and elks. Requires an ink and quill in the offhand to use.",
   "game:tabname-nametag": "Nametag",
-  "name": "Give a name to the entity being currently looked at"
+  "name": "Give a name to the entity being currently looked at",
+  "playerowned": "Owned by me"
 }

@@ -8,8 +8,8 @@
   "contributors": [
     "justOmi"
   ],
-  "description": "Adds a nametag item that can be used to name entities (elks, boats, etc.)",
-  "version": "1.1.0",
+  "description": "Adds a nametag item that can be used to name entities (elks, boats, etc.). Can also be used to take ownership of boats.",
+  "version": "1.2.0",
   "dependencies": {
     "game": ""
   }
