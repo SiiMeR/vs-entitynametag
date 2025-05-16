@@ -47,15 +47,15 @@ public class ItemEntityNametag : Item
 
         if (api.Side == EnumAppSide.Client)
         {
-            new GuiDialogEntityNameEditor(api as ICoreClientAPI, entitySel.Entity, player,
-                    (newName, shouldTakeOwnership) =>
+            new GuiDialogEntityNameEditor(api as ICoreClientAPI, entitySel.Entity,
+                    (newName, shouldHaveOwnership) =>
                     {
                         EntityNametagModSystem.ClientNetworkChannel.SendPacket(
                             new NameEntityPacket
                             {
                                 EntityId = entitySel.Entity.EntityId,
                                 NewName = newName,
-                                ShouldHaveOwnership = shouldTakeOwnership
+                                ShouldHaveOwnership = shouldHaveOwnership
                             });
                     })
                 .TryOpen();

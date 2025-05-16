@@ -1,6 +1,5 @@
 ﻿using System;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.GameContent;
 
@@ -8,16 +7,16 @@ namespace EntityNametag;
 
 public class GuiDialogEntityNameEditor : GuiDialog
 {
-    public GuiDialogEntityNameEditor(ICoreClientAPI capi, Entity entity, EntityPlayer player,
+    public GuiDialogEntityNameEditor(ICoreClientAPI capi, Entity entity,
         Action<string, bool> onEditFinished)
         : base(capi)
     {
-        Compose(entity, player, onEditFinished);
+        Compose(entity, onEditFinished);
     }
 
     public override string ToggleKeyCombinationCode { get; } = "entitynameeditorkeycombo";
 
-    private void Compose(Entity entity, EntityPlayer player, Action<string, bool> onEditFinished)
+    private void Compose(Entity entity, Action<string, bool> onEditFinished)
     {
         var textBounds = ElementStdBounds.Rowed(0.4f, 0, EnumDialogArea.LeftFixed).WithFixedWidth(500);
         var bgBounds = ElementStdBounds.DialogBackground()
@@ -61,7 +60,7 @@ public class GuiDialogEntityNameEditor : GuiDialog
                     {
                         onEditFinished(SingleComposer
                             .GetTextInput("newentityname")
-                            .GetText(), SingleComposer.GetToggleButton("playerowned").On);
+                            .GetText(), SingleComposer.GetToggleButton("playerowned")?.On ?? false);
                         TryClose();
                         return true;
                     },
