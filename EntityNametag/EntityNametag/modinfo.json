@@ -6,10 +6,11 @@
     "SiiMeR"
   ],
   "contributors": [
-    "justOmi"
+    "justOmi",
+    "C4BR3R4"
   ],
   "description": "Adds a nametag item that can be used to name entities (elks, boats, etc.). Can also be used to take ownership of boats.",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "dependencies": {
     "game": ""
   }

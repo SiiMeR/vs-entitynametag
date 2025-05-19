@@ -1,0 +1,13 @@
+﻿{
+  "_comentarios-1": "Entity Nametags v1.2.1 || Enlace de VS ModDB: https://mods.vintagestory.at/entitynametags ",
+  "_comentarios-2": "Traducido por C4BR3R4 || Última Modificación: 16/05/2025 || Registro de Cambios: https://c4br3r4.es/index.php?topic=1365.0 ",
+  "editortitle": "Introduce el nombre de la entidad",
+  "editorcancel": "Cancelar",
+  "editorconfirm": "Confirmar",
+  "editorclear": "Borrar",
+  "item-nametag": "Etiquetador",
+  "itemdesc-nametag": "Este objeto se usa para cambiar el nombre de entidades como Animales y Veleros.<br><br><font opacity='0.6'><i>Para usarlo, necesitas sostener Pluma y Tinta, en la mano alternativa.</i></font><br>",
+  "game:tabname-nametag": "Etiquetador",
+  "name": "Cambiar Nombre",
+  "playerowned": "Protegerlo para Mí"
+}
