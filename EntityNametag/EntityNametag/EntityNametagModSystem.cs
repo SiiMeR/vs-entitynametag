@@ -5,6 +5,7 @@ using HarmonyLib;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
@@ -187,6 +188,11 @@ public static class EntityBoatPatch
         var ownableBehavior = __instance.GetBehavior<EntityBehaviorOwnable>();
         if (ownableBehavior != null && !ownableBehavior.IsOwner(byEntity))
         {
+            if (__instance.Api is ICoreClientAPI capi)
+            {
+                capi.TriggerIngameError(__instance, "locked", Lang.Get("game:ingameerror-locked"));
+            }
+
             // If the player is not the owner, do not allow interaction.
             return false;
         }
