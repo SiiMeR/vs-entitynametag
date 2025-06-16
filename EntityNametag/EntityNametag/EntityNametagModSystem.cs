@@ -5,6 +5,7 @@ using HarmonyLib;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
+using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
@@ -32,6 +33,12 @@ public class EntityNametagModSystem : ModSystem
         var patch = AccessTools.Method(typeof(EntityNamePatch), nameof(EntityNamePatch.Postfix));
 
         harmony.Patch(original, postfix: new HarmonyMethod(patch));
+
+        var o2 =
+            AccessTools.Method(typeof(EntityBoat), "OnInteract");
+        var p2 = AccessTools.Method(typeof(EntityBoatPatch), nameof(EntityBoatPatch.Patch));
+
+        harmony.Patch(o2, new HarmonyMethod(p2));
     }
 
     public override void StartClientSide(ICoreClientAPI api)
@@ -167,5 +174,23 @@ public static class EntityNamePatch
         {
             __result = customName;
         }
+    }
+}
+
+public static class EntityBoatPatch
+{
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(EntityBoat), "OnInteract")]
+    public static bool Patch(
+        EntityBoat __instance, EntityAgent byEntity, ItemSlot itemslot, Vec3d hitPosition, EnumInteractMode mode)
+    {
+        var ownableBehavior = __instance.GetBehavior<EntityBehaviorOwnable>();
+        if (ownableBehavior != null && !ownableBehavior.IsOwner(byEntity))
+        {
+            // If the player is not the owner, do not allow interaction.
+            return false;
+        }
+
+        return true;
     }
 }
