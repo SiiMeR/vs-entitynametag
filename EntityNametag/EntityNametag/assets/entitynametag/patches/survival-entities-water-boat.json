@@ -5,25 +5,25 @@
     "value": {
       "groupCode": "mountableboat"
     },
-    "file": "game:entities/water/boat.json",
+    "file": "game:entities/nonliving/boat-sailed.json",
     "side": "Server"
   },
   {
     "op": "add",
-    "path": "/client/behaviors/8",
+    "path": "/client/behaviors/-",
     "value": {
       "code": "ownable"
     },
-    "file": "game:entities/water/boat.json",
+    "file": "game:entities/nonliving/boat-sailed.json",
     "side": "Server"
   },
   {
     "op": "add",
-    "path": "/server/behaviors/6",
+    "path": "/server/behaviors/-",
     "value": {
       "code": "ownable"
     },
-    "file": "game:entities/water/boat.json",
+    "file": "game:entities/nonliving/boat-sailed.json",
     "side": "Server"
   }
 ]
