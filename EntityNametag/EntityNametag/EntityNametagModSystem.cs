@@ -71,7 +71,8 @@ public class EntityNametagModSystem : ModSystem
 
     private void OnNameEntityPacket(IServerPlayer fromPlayer, NameEntityPacket packet)
     {
-        var entity = Api.World.GetEntityById(packet.EntityId);
+        var sapi = fromPlayer.Entity.World.Api;
+        var entity = sapi.World.GetEntityById(packet.EntityId);
         if (entity == null)
         {
             return;
@@ -79,7 +80,7 @@ public class EntityNametagModSystem : ModSystem
 
         if (Config.NotApplicableToEntityClasses.Contains(entity.Class))
         {
-            Api.Logger.Error(
+            sapi.Logger.Error(
                 $"Nametag cannot be applied to {entity.Class}. This could mean someone is trying to cheat (there is client-side validation in place). Requesting player: {fromPlayer.PlayerUID}");
             return;
         }
@@ -120,7 +121,7 @@ public class EntityNametagModSystem : ModSystem
         entity.WatchedAttributes.SetString("customName", packet.NewName);
         entity.WatchedAttributes.MarkPathDirty("customName");
 
-        Api.Logger.Audit(
+        sapi.Logger.Audit(
             $"Player {fromPlayer.PlayerName} ({fromPlayer.PlayerUID}) renamed entity {entity.Code} (at {entity.ServerPos.AsBlockPos}) from '{originalName}' to '{packet.NewName}'");
 
         var ownableBehavior = entity.GetBehavior<EntityBehaviorOwnable>();
@@ -128,11 +129,11 @@ public class EntityNametagModSystem : ModSystem
         {
             if (packet.ShouldHaveOwnership)
             {
-                Api.ModLoader.GetModSystem<ModSystemEntityOwnership>().ClaimOwnership(entity, fromPlayer.Entity);
+                sapi.ModLoader.GetModSystem<ModSystemEntityOwnership>().ClaimOwnership(entity, fromPlayer.Entity);
             }
             else
             {
-                Api.ModLoader.GetModSystem<ModSystemEntityOwnership>().RemoveOwnership(entity);
+                sapi.ModLoader.GetModSystem<ModSystemEntityOwnership>().RemoveOwnership(entity);
             }
         }
     }
