@@ -10,4 +10,6 @@ public class EntityNametagConfig
         nameof(EntityPlayer), nameof(EntityTrader), nameof(EntityVillager), nameof(EntityHumanoid),
         nameof(EntityEidolon)
     };
+
+    public bool EnableBoatLocking = true;
 }

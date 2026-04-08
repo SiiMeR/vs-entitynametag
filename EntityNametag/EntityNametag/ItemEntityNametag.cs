@@ -55,7 +55,7 @@ public class ItemEntityNametag : Item
                             {
                                 EntityId = entitySel.Entity.EntityId,
                                 NewName = newName,
-                                ShouldHaveOwnership = shouldHaveOwnership
+                                ShouldHaveOwnership = EntityNametagModSystem.Config.EnableBoatLocking && shouldHaveOwnership
                             });
                     })
                 .TryOpen();

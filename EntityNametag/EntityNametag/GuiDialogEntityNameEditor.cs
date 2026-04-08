@@ -37,7 +37,7 @@ public class GuiDialogEntityNameEditor : GuiDialog
                     {
                         SingleComposer.GetButton("confirmbutton").Enabled = !string.IsNullOrWhiteSpace(newText);
                     }, null, "newentityname")
-                .AddIf(entity is EntityBoat)
+                .AddIf(entity is EntityBoat && EntityNametagModSystem.Config.EnableBoatLocking)
                 .AddToggleButton("X", font, null, ElementBounds.Fixed(0, 60, 25, 30),
                     "playerowned")
                 .AddStaticText(LangString("playerowned"), font, ElementBounds.Fixed(35, 66, 200, 30))
@@ -60,7 +60,7 @@ public class GuiDialogEntityNameEditor : GuiDialog
                     {
                         onEditFinished(SingleComposer
                             .GetTextInput("newentityname")
-                            .GetText(), SingleComposer.GetToggleButton("playerowned")?.On ?? false);
+                            .GetText(), EntityNametagModSystem.Config.EnableBoatLocking && (SingleComposer.GetToggleButton("playerowned")?.On ?? false));
                         TryClose();
                         return true;
                     },
@@ -72,10 +72,9 @@ public class GuiDialogEntityNameEditor : GuiDialog
 
         SingleComposer.GetTextInput("newentityname").SetValue(entity.GetName());
 
-        if (entity is EntityBoat)
-        {
-            var isAlreadyOwned = entity.WatchedAttributes.GetTreeAttribute("ownedby") != null;
-            SingleComposer.GetToggleButton("playerowned")?.SetValue(isAlreadyOwned);
-        }
+        if (entity is not EntityBoat) return;
+        if (!EntityNametagModSystem.Config.EnableBoatLocking) return;
+        var isAlreadyOwned = entity.WatchedAttributes.GetTreeAttribute("ownedby") != null;
+        SingleComposer.GetToggleButton("playerowned")?.SetValue(isAlreadyOwned);
     }
 }

@@ -44,7 +44,7 @@ public class EntityNametagModSystem : ModSystem
 
     public override void StartClientSide(ICoreClientAPI api)
     {
-        Config = new EntityNametagConfig();
+        Config = TryToLoadConfig(api);
 
         ClientNetworkChannel = api.Network.RegisterChannel(Mod.Info.ModID)
             .RegisterMessageType<NameEntityPacket>()
@@ -54,8 +54,9 @@ public class EntityNametagModSystem : ModSystem
 
     public override void StartServerSide(ICoreServerAPI api)
     {
-        TryToLoadConfig(api);
-
+        Config = TryToLoadConfig(api);
+        api.StoreModConfig(Config, "EntityNametagConfig.json");
+        
         ServerNetworkChannel = api.Network.RegisterChannel(Mod.Info.ModID)
             .RegisterMessageType<NameEntityPacket>()
             .RegisterMessageType<ConfigPacket>()
@@ -63,7 +64,11 @@ public class EntityNametagModSystem : ModSystem
 
         api.Event.PlayerNowPlaying += player =>
         {
-            var configPacket = new ConfigPacket { NotApplicableToEntityClasses = Config.NotApplicableToEntityClasses };
+            var configPacket = new ConfigPacket
+            {
+                NotApplicableToEntityClasses = Config.NotApplicableToEntityClasses,
+                EnableBoatLocking = Config.EnableBoatLocking
+            };
             ServerNetworkChannel.SendPacket(
                 configPacket, player);
         };
@@ -127,7 +132,7 @@ public class EntityNametagModSystem : ModSystem
         var ownableBehavior = entity.GetBehavior<EntityBehaviorOwnable>();
         if (ownableBehavior != null && entity is EntityBoat)
         {
-            if (packet.ShouldHaveOwnership)
+            if (packet.ShouldHaveOwnership && Config.EnableBoatLocking)
             {
                 sapi.ModLoader.GetModSystem<ModSystemEntityOwnership>().ClaimOwnership(entity, fromPlayer.Entity);
             }
@@ -141,26 +146,27 @@ public class EntityNametagModSystem : ModSystem
     private void OnConfigPacketReceived(ConfigPacket packet)
     {
         Config.NotApplicableToEntityClasses = packet.NotApplicableToEntityClasses;
+        Config.EnableBoatLocking = packet.EnableBoatLocking;
+        Api.StoreModConfig(Config, "EntityNametagConfig.json");
     }
 
-    private static void TryToLoadConfig(ICoreAPI api)
+    private static EntityNametagConfig TryToLoadConfig(ICoreAPI api)
     {
+        var config = new EntityNametagConfig();
         //It is important to surround the LoadModConfig function in a try-catch. 
         //If loading the file goes wrong, then the 'catch' block is run.
         try
         {
-            Config = api.LoadModConfig<EntityNametagConfig>("EntityNametagConfig.json") ?? new EntityNametagConfig();
-
-            //Save a copy of the mod config.
-            api.StoreModConfig(Config, "EntityNametagConfig.json");
+            config = api.LoadModConfig<EntityNametagConfig>("EntityNametagConfig.json") ?? new EntityNametagConfig();
         }
         catch (Exception e)
         {
             //Couldn't load the mod config... Create a new one with default settings, but don't save it.
             api.Logger.Error("Could not load config! Loading default settings instead.");
             api.Logger.Error(e);
-            Config = new EntityNametagConfig();
         }
+
+        return config;
     }
 }
 
@@ -187,7 +193,8 @@ public static class EntityBoatPatch
         EntityBoat __instance, EntityAgent byEntity, ItemSlot itemslot, Vec3d hitPosition, EnumInteractMode mode)
     {
         var ownableBehavior = __instance.GetBehavior<EntityBehaviorOwnable>();
-        if (ownableBehavior != null && !ownableBehavior.IsOwner(byEntity))
+        var isOwner = ownableBehavior != null && ownableBehavior.IsOwner(byEntity);
+        if (ownableBehavior != null && !isOwner && EntityNametagModSystem.Config.EnableBoatLocking)
         {
             if (__instance.Api is ICoreClientAPI capi)
             {
