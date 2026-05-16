@@ -1,6 +1,5 @@
 ﻿global using static EntityNametag.Util;
 using System;
-using System.Linq;
 using HarmonyLib;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -56,7 +55,7 @@ public class EntityNametagModSystem : ModSystem
     {
         Config = TryToLoadConfig(api);
         api.StoreModConfig(Config, "EntityNametagConfig.json");
-        
+
         ServerNetworkChannel = api.Network.RegisterChannel(Mod.Info.ModID)
             .RegisterMessageType<NameEntityPacket>()
             .RegisterMessageType<ConfigPacket>()
@@ -127,7 +126,7 @@ public class EntityNametagModSystem : ModSystem
         entity.WatchedAttributes.MarkPathDirty("customName");
 
         sapi.Logger.Audit(
-            $"Player {fromPlayer.PlayerName} ({fromPlayer.PlayerUID}) renamed entity {entity.Code} (at {entity.ServerPos.AsBlockPos}) from '{originalName}' to '{packet.NewName}'");
+            $"Player {fromPlayer.PlayerName} ({fromPlayer.PlayerUID}) renamed entity {entity.Code} (at {entity.Pos.AsBlockPos}) from '{originalName}' to '{packet.NewName}'");
 
         var ownableBehavior = entity.GetBehavior<EntityBehaviorOwnable>();
         if (ownableBehavior != null && entity is EntityBoat)

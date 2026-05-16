@@ -11,7 +11,7 @@
     "Zaedin"
   ],
   "description": "Adds a nametag item that can be used to name entities (elks, boats, etc.). Can also be used to take ownership of boats.",
-  "version": "1.6.0",
+  "version": "2.6.0",
   "dependencies": {
     "game": ""
   }
